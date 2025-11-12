@@ -2,16 +2,8 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addBook } from "../redux/booksSlice";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
-/**
- * AddBook Page Component
- *
- * Features:
- * - Form for adding new books with fields: title, author, category, description, rating
- * - Form validation for all fields
- * - Redux integration to add book to global state
- * - Redirect to Browse Books page after successful submission
- */
 const initialFormState = {
   title: "",
   author: "",
@@ -28,10 +20,6 @@ const AddBook = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  /**
-   * Validates form data
-   * Returns true if valid, false otherwise
-   */
   const validate = () => {
     const errs = {};
     if (!formData.title.trim()) errs.title = "Title is required";
@@ -51,19 +39,10 @@ const AddBook = () => {
     return Object.keys(errs).length === 0;
   };
 
-  /**
-   * Updates form state on input change
-   */
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  /**
-   * Handles form submission:
-   * - validates input
-   * - dispatches Redux action
-   * - redirects to Browse Books
-   */
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validate()) {
@@ -81,12 +60,19 @@ const AddBook = () => {
   };
 
   return (
-    <div className="container">
+    <motion.div
+      className="container"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       <h1 className="my-4">Add New Book</h1>
       <form onSubmit={handleSubmit} noValidate aria-label="Add new book form">
-        {/* Title Field */}
+        {/* Title */}
         <div className="mb-3">
-          <label className="form-label" htmlFor="title">Title</label>
+          <label className="form-label" htmlFor="title">
+            Title
+          </label>
           <input
             id="title"
             type="text"
@@ -103,9 +89,11 @@ const AddBook = () => {
             <div className="invalid-feedback">{errors.title}</div>
           )}
         </div>
-        {/* Author Field */}
+        {/* Author */}
         <div className="mb-3">
-          <label className="form-label" htmlFor="author">Author</label>
+          <label className="form-label" htmlFor="author">
+            Author
+          </label>
           <input
             id="author"
             type="text"
@@ -122,9 +110,11 @@ const AddBook = () => {
             <div className="invalid-feedback">{errors.author}</div>
           )}
         </div>
-        {/* Category Field */}
+        {/* Category */}
         <div className="mb-3">
-          <label className="form-label" htmlFor="category">Category</label>
+          <label className="form-label" htmlFor="category">
+            Category
+          </label>
           <select
             id="category"
             name="category"
@@ -145,13 +135,17 @@ const AddBook = () => {
             <div className="invalid-feedback">{errors.category}</div>
           )}
         </div>
-        {/* Description Field */}
+        {/* Description */}
         <div className="mb-3">
-          <label className="form-label" htmlFor="description">Description</label>
+          <label className="form-label" htmlFor="description">
+            Description
+          </label>
           <textarea
             id="description"
             name="description"
-            className={`form-control ${errors.description ? "is-invalid" : ""}`}
+            className={`form-control ${
+              errors.description ? "is-invalid" : ""
+            }`}
             rows="3"
             value={formData.description}
             onChange={handleChange}
@@ -162,9 +156,11 @@ const AddBook = () => {
             <div className="invalid-feedback">{errors.description}</div>
           )}
         </div>
-        {/* Rating Field */}
+        {/* Rating */}
         <div className="mb-3">
-          <label className="form-label" htmlFor="rating">Rating (1 to 5)</label>
+          <label className="form-label" htmlFor="rating">
+            Rating (1 to 5)
+          </label>
           <input
             id="rating"
             type="number"
@@ -183,11 +179,17 @@ const AddBook = () => {
           )}
         </div>
         {/* Submit Button */}
-        <button type="submit" className="btn btn-primary">
+        <motion.button
+          type="submit"
+          className="btn btn-primary"
+          whileTap={{ scale: 0.95 }}
+          whileHover={{ scale: 1.02 }}
+          transition={{ type: "spring", stiffness: 300, damping: 20 }}
+        >
           Add Book
-        </button>
+        </motion.button>
       </form>
-    </div>
+    </motion.div>
   );
 };
 

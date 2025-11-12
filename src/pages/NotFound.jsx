@@ -1,5 +1,6 @@
 import React from "react";
 import { useLocation, Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 /**
  * NotFound (404) Page Component
@@ -16,7 +17,13 @@ const NotFound = () => {
   const location = useLocation();
 
   return (
-    <main className="container text-center my-5" aria-label="404 Page Not Found">
+    <motion.main
+      className="container text-center my-5"
+      aria-label="404 Page Not Found"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.6 }}
+    >
       {/* 404 Error Title */}
       <h1>404 - Page Not Found</h1>
 
@@ -29,7 +36,7 @@ const NotFound = () => {
       <Link to="/" className="btn btn-primary" aria-label="Go to Home">
         Go to Home
       </Link>
-    </main>
+    </motion.main>
   );
 };
 

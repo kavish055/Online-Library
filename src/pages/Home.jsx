@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import BookCard from "../components/BookCard";
+import { motion } from "framer-motion";
 
 // Available book categories for filtering
 const categories = ["Fiction", "Non-Fiction", "Sci-Fi", "Biography", "Fantasy"];
@@ -24,28 +25,66 @@ const Home = () => {
     .sort((a, b) => b.rating - a.rating)
     .slice(0, 4);
 
+  const fadeIn = {
+    hidden: { opacity: 0, y: 20 },
+    visible: (i) => ({
+      opacity: 1,
+      y: 0,
+      transition: { delay: i * 0.15, duration: 0.5 },
+    }),
+  };
+
   return (
     <main className="container" aria-label="Home page">
       {/* Page title */}
-      <h1 className="my-4">Welcome to Online Library</h1>
+      <motion.h1
+        className="my-4"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        Welcome to Online Library
+      </motion.h1>
 
       {/* Categories section */}
       <section className="mb-5" aria-label="Book categories">
         <h2>Book Categories</h2>
         <div className="d-flex flex-wrap gap-3">
-          {categories.map((cat) => (
-            <Link
+          {categories.map((cat, i) => (
+            <motion.div
               key={cat}
-              to={`/books/${cat.toLowerCase().replace(/\s/g, "-")}`}
-              className="btn btn-outline-primary"
-              aria-label={`Browse ${cat} books`}
+              custom={i}
+              initial="hidden"
+              animate="visible"
+              variants={fadeIn}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
             >
-              {cat}
-            </Link>
+              <Link
+                to={`/books/${cat.toLowerCase().replace(/\s/g, "-")}`}
+                className="btn btn-outline-primary"
+                aria-label={`Browse ${cat} books`}
+              >
+                {cat}
+              </Link>
+            </motion.div>
           ))}
-          <Link to="/books/all" className="btn btn-outline-secondary" aria-label="Browse all books">
-            All
-          </Link>
+          <motion.div
+            custom={categories.length}
+            initial="hidden"
+            animate="visible"
+            variants={fadeIn}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Link
+              to="/books/all"
+              className="btn btn-outline-secondary"
+              aria-label="Browse all books"
+            >
+              All
+            </Link>
+          </motion.div>
         </div>
       </section>
 
@@ -54,10 +93,16 @@ const Home = () => {
         <h2>Popular Books</h2>
         <div className="row row-cols-1 row-cols-md-4 g-4">
           {popularBooks.length > 0 ? (
-            popularBooks.map((book) => (
-              <div className="col" key={book.id}>
+            popularBooks.map((book, i) => (
+              <motion.div
+                className="col"
+                key={book.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.2, duration: 0.5 }}
+              >
                 <BookCard book={book} />
-              </div>
+              </motion.div>
             ))
           ) : (
             <p>No popular books available.</p>

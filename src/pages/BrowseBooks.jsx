@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import BookCard from "../components/BookCard";
 import SearchBar from "../components/SearchBar";
+import { motion } from "framer-motion";
 
 /**
  * BrowseBooks Page Component
@@ -10,7 +11,7 @@ import SearchBar from "../components/SearchBar";
  * Features:
  * - Filter books by category via URL parameter
  * - Search books by title or author
- * - Display filtered results as book cards
+ * - Display filtered results as animated book cards
  *
  * Dynamic routing: /books/:category allows filtering by specific categories
  */
@@ -22,7 +23,6 @@ const BrowseBooks = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredBooks, setFilteredBooks] = useState([]);
 
-  // Apply filters when category, books, or search term changes
   useEffect(() => {
     let filtered = books;
 
@@ -45,7 +45,6 @@ const BrowseBooks = () => {
     setFilteredBooks(filtered);
   }, [category, books, searchTerm]);
 
-  // Redirect to 'all' if category is invalid
   useEffect(() => {
     const validCategories = books
       .map((book) => book.category.toLowerCase().replace(/\s/g, "-"))
@@ -56,24 +55,47 @@ const BrowseBooks = () => {
     }
   }, [category, books, navigate]);
 
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.15 } },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+  };
+
   return (
     <div className="container" aria-label="Browse Books Page">
       <h1 className="my-4">
         Books {category ? `- ${category.charAt(0).toUpperCase() + category.slice(1)}` : ""}
       </h1>
 
-      {/* Search bar for filtering books */}
-      <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+      {/* Animated Search bar */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.4 }}
+      >
+        <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+      </motion.div>
 
       {filteredBooks.length === 0 && <p>No books found.</p>}
 
-      <div className="row row-cols-1 row-cols-md-4 g-4">
+      {/* Animated book cards grid */}
+      <motion.div
+        className="row row-cols-1 row-cols-md-4 g-4"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
         {filteredBooks.map((book) => (
-          <div className="col" key={book.id}>
+          <motion.div className="col" key={book.id} variants={itemVariants}>
             <BookCard book={book} />
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </div>
   );
 };
