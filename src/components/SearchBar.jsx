@@ -25,7 +25,7 @@ const SearchBar = ({ searchTerm, setSearchTerm }) => (
       aria-label="Search Books"
       value={searchTerm}
       onChange={(e) => setSearchTerm(e.target.value)}
-    />np
+    input/>
   </div>
 );
 
